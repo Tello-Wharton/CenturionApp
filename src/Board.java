@@ -17,6 +17,8 @@ public class Board extends JPanel implements ActionListener{
     private long timeRemaining;
     private long spentTime;
 
+    private long waitStart;
+    private int waitTime;
 
     private ArrayList<JButton> menu;
 
@@ -33,8 +35,10 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.black);
         setFocusable(true);
         setDoubleBuffered(true);
-
+        //setSize(1366,768);
+        setMinimumSize(new Dimension(1366,768));
         spentTime = 0;
+        waitTime = 5;
 
         menu = Main.menu;
 
@@ -58,6 +62,7 @@ public class Board extends JPanel implements ActionListener{
         c = new GridBagConstraints();
 
         pause = new JButton("Pause");
+        pause.setVisible(false);
         pause.addActionListener(new PauseListener());
         pause.setFont(new Font(null, Font.PLAIN, 48));
         c.anchor = GridBagConstraints.CENTER;
@@ -84,6 +89,7 @@ public class Board extends JPanel implements ActionListener{
     public void initApp(){
 
         startTime = System.currentTimeMillis();
+        waitStart = System.currentTimeMillis();
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -101,7 +107,22 @@ public class Board extends JPanel implements ActionListener{
         }else {
             countDown.setText(processClock((Main.drinkingTime - Main.startTime)* 60000 - spentTime));
         }
+
+        if((System.currentTimeMillis() - waitStart) > waitTime * 1000){
+            waitStart = System.currentTimeMillis();
+            if(Main.IS_IN_FULLSCREEN)calculateFull();
+            else{
+                calculateWindow();
+            }
+        }
+
         repaint();
+    }
+
+    private void calculateWindow() {
+    }
+
+    private void calculateFull() {
     }
 
     @Override
@@ -202,4 +223,6 @@ public class Board extends JPanel implements ActionListener{
             started = false;
         }
     }
+
+
 }

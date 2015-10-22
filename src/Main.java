@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +11,8 @@ public class Main extends JFrame{
     private JButton fullscreen;
     private JButton close;
     private JButton settings;
-    public static JPanel menuBox = new JPanel();
+    private JPanel menuBox;
+    private GridBagConstraints boxC;
 
     public static ArrayList<JButton> menu;
     JTextField timeBox;
@@ -24,9 +24,14 @@ public class Main extends JFrame{
     public static int drinkingTime;
     public static int startTime;
 
-    private boolean Am_I_In_FullScreen;
+    public static boolean IS_IN_FULLSCREEN;
     private int PrevX,PrevY,PrevWidth,PrevHeight;
     Board board;
+
+    public static final int WIDTH = 1024;
+    public static final int HEIGHT = 768;
+
+
 
     public static void main(String[] args){
         EventQueue.invokeLater(new Runnable() {
@@ -34,7 +39,8 @@ public class Main extends JFrame{
             public void run() {
                 Main ex = new Main();
                 ex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                ex.setSize(1366, 768);
+                ex.setSize(WIDTH, HEIGHT);
+                ex.setResizable(false);
                 ex.setVisible(true);
             }
         });
@@ -42,10 +48,7 @@ public class Main extends JFrame{
 
     public Main() {
         menu = new ArrayList<JButton>();
-        board = new Board();
-        Am_I_In_FullScreen = false;
-        setContentPane(board);
-        pack();
+        IS_IN_FULLSCREEN = false;
 
         settings = new JButton("Settings");
         menu.add(settings);
@@ -61,22 +64,24 @@ public class Main extends JFrame{
         close.addActionListener(new CloseListener());
 
 
-        JPanel menuBox = makeRow(settings, fullscreen, close);
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.NORTH;
-        c.gridy = 0;
-        board.add(menuBox,c);
+        menuBox = makeRow(settings, fullscreen, close);
+        boxC = new GridBagConstraints();
+        boxC.anchor = GridBagConstraints.NORTH;
+        boxC.gridy = 0;
 
         settings.setVisible(true);
         fullscreen.setVisible(true);
         close.setVisible(true);
 
 
-
         rows = new ArrayList<JPanel>();
 
         drinkingTime = 100;
         startTime = 0;
+
+        initBoard();
+
+        setResizable(false);
 
     }
 
@@ -87,7 +92,7 @@ public class Main extends JFrame{
         public void actionPerformed(ActionEvent arg0) {
 
 
-            if(Am_I_In_FullScreen == false){
+            if(IS_IN_FULLSCREEN == false){
 
                 PrevX = getX();
                 PrevY = getY();
@@ -100,7 +105,7 @@ public class Main extends JFrame{
 
                 setBounds(0,0,getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
                 setVisible(true);
-                Am_I_In_FullScreen = true;
+                IS_IN_FULLSCREEN = true;
             }
             else{
                 setVisible(true);
@@ -109,7 +114,7 @@ public class Main extends JFrame{
                 dispose();
                 setUndecorated(false);
                 setVisible(true);
-                Am_I_In_FullScreen = false;
+                IS_IN_FULLSCREEN = false;
             }
         }
     }
@@ -126,6 +131,9 @@ public class Main extends JFrame{
             rows = new ArrayList<JPanel>();
             options = new JFrame();
 
+            JPanel optionBoard = new JPanel();
+            optionBoard.setBackground(Color.black);
+
             JLabel time = new JLabel("Centurion Length:");
             time.setForeground(Color.white);
             timeBox = new JTextField("" + drinkingTime,3);
@@ -139,18 +147,22 @@ public class Main extends JFrame{
 
 
 
-            options.setLayout(new GridLayout(rows.size() + 1, 0));
+            optionBoard.setLayout(new GridLayout(rows.size() + 1, 0));
 
             for(JPanel row : rows){
-                options.add(row);
+                optionBoard.add(row);
             }
 
             JButton okay = new JButton("Okay");
             okay.addActionListener(new OkayListener());
+            JButton reset = new JButton("Reset");
+            reset.addActionListener(new ResetListener());
             JButton cancel = new JButton("Cancel");
             cancel.addActionListener(new CancelListener());
-            options.add(makeRow(okay,cancel));
+            optionBoard.add(makeRow(okay,reset,cancel));
 
+
+            options.add(optionBoard);
             options.setSize(300, 200);
             options.pack();
             options.setResizable(false);
@@ -163,7 +175,8 @@ public class Main extends JFrame{
     private static JPanel makeRow(Component... components){
         JPanel row = new JPanel();
         row.setLayout(new FlowLayout());
-        row.setBackground(Color.black);
+        //row.setBackground(Color.black);
+        row.setOpaque(false);
         for(Component component : components){
             row.add(component);
         }
@@ -193,8 +206,14 @@ public class Main extends JFrame{
     private class ResetListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            initBoard();
         }
+    }
+
+    private void initBoard(){
+        board = new Board();
+        setContentPane(board);
+        board.add(menuBox, boxC);
     }
 
 }
