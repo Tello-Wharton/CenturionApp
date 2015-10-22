@@ -1,6 +1,7 @@
 
 
 import javax.swing.*;
+import javax.swing.text.html.parser.Entity;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class Board extends JPanel implements ActionListener{
 
     private boolean startVisible = true;
 
+    private ArrayList<AutoEntity> entities;
+
 
     public Board() {
         addMouseMotionListener(new MAdapter());
@@ -35,15 +38,16 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.black);
         setFocusable(true);
         setDoubleBuffered(true);
-        //setSize(1366,768);
-        setMinimumSize(new Dimension(1366,768));
+        setMinimumSize(new Dimension(1366, 768));
         spentTime = 0;
-        waitTime = 5;
+        waitTime = 1;
 
         menu = Main.menu;
 
         initComponents();
         initApp();
+
+        entities = new ArrayList<AutoEntity>();
 
     }
 
@@ -76,11 +80,7 @@ public class Board extends JPanel implements ActionListener{
         start.addActionListener(new StartListener());
         start.setFont(new Font(null, Font.PLAIN, 48));
         c.anchor = GridBagConstraints.CENTER;
-
         c.gridy = 1;
-
-
-
         add(start, c);
 
 
@@ -110,20 +110,14 @@ public class Board extends JPanel implements ActionListener{
 
         if((System.currentTimeMillis() - waitStart) > waitTime * 1000){
             waitStart = System.currentTimeMillis();
-            if(Main.IS_IN_FULLSCREEN)calculateFull();
-            else{
-                calculateWindow();
-            }
+            entities.add(new AutoEntity(this));
         }
+
+        entities.forEach(AutoEntity::calculate);
 
         repaint();
     }
 
-    private void calculateWindow() {
-    }
-
-    private void calculateFull() {
-    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -133,7 +127,9 @@ public class Board extends JPanel implements ActionListener{
 
     private void doDrawing(Graphics g) {
 
-
+        for(AutoEntity entity :  entities){
+            entity.draw(g);
+        }
 
         Toolkit.getDefaultToolkit().sync();
     }

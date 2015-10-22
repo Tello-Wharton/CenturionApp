@@ -83,6 +83,7 @@ public class Main extends JFrame{
 
         setResizable(false);
 
+
     }
 
 
