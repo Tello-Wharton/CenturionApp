@@ -20,7 +20,7 @@ public class Board extends JPanel implements ActionListener{
     private long spentTime;
 
     private long waitStart;
-    private int waitTime;
+    private double waitTime;
 
     private ArrayList<JButton> menu;
 
@@ -46,7 +46,7 @@ public class Board extends JPanel implements ActionListener{
         setDoubleBuffered(true);
         setMinimumSize(new Dimension(1366, 768));
         spentTime = 0;
-        waitTime = 2;
+        waitTime = 4;
 
         menu = Main.menu;
 
@@ -185,6 +185,7 @@ public class Board extends JPanel implements ActionListener{
     }
 
     private String processClock(long time){
+        if (time > 0) {
             int minutes = 0;
             int seconds = 0;
             int milliseconds;
@@ -193,16 +194,15 @@ public class Board extends JPanel implements ActionListener{
             String secs;
             String mills;
 
-            while (time >= 60000){
-                minutes+=1;
+            while (time >= 60000) {
+                minutes += 1;
                 time -= 60000;
             }
-            if(minutes < 10){
+            if (minutes < 10) {
                 mins = "00" + minutes;
-            }else if(minutes < 100){
+            } else if (minutes < 100) {
                 mins = "0" + minutes;
-            }
-            else{
+            } else {
                 mins = "" + minutes;
             }
 
@@ -210,25 +210,30 @@ public class Board extends JPanel implements ActionListener{
                 seconds += 1;
                 time -= 1000;
             }
-            if(minutes + 1 < Main.drinkingTime){
+            if (minutes + 1 < Main.drinkingTime) {
                 if (seconds == 59) drink();
                 if (seconds == 54) drinkContainer.setVisible(false);
             }
-            if(seconds < 10){
-                secs = "0"+seconds;
-            }else {
+            if (seconds < 10) {
+                secs = "0" + seconds;
+            } else {
                 secs = "" + seconds;
             }
             milliseconds = (int) time;
-            if(milliseconds < 10){
+            if (milliseconds < 10) {
                 mills = "00" + milliseconds;
-            }else if(milliseconds < 100){
+            } else if (milliseconds < 100) {
                 mills = "0" + milliseconds;
-            }
-            else{
+            } else {
                 mills = "" + milliseconds;
             }
-        return mins+":"+secs+":"+mills;
+            return mins + ":" + secs + ":" + mills;
+        }else {
+            drinkText.setText("<html><center>LAST</center><center>DRINK</center><center>:)</center></html>");
+            drinkText.setFont(new Font(null,Font.PLAIN,96));
+            drinkContainer.setVisible(true);
+            return "000:00:000";
+        }
     }
 
     private void drink() {
