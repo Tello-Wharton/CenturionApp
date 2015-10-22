@@ -1,7 +1,7 @@
 
 
+
 import javax.swing.*;
-import javax.swing.text.html.parser.Entity;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by Aaron on 21/10/2015.
  */
+
 public class Board extends JPanel implements ActionListener{
     private static final int DELAY = 25;
     private static int mouseMotion = 5000;
@@ -24,12 +25,17 @@ public class Board extends JPanel implements ActionListener{
     private ArrayList<JButton> menu;
 
     private JLabel countDown;
+
+
     private JButton pause;
     private JButton start;
 
     private boolean startVisible = true;
 
-    private ArrayList<AutoEntity> entities;
+    public static ArrayList<AutoEntity> entities;
+
+    private JPanel drinkContainer;
+    private JLabel drinkText;
 
 
     public Board() {
@@ -40,7 +46,7 @@ public class Board extends JPanel implements ActionListener{
         setDoubleBuffered(true);
         setMinimumSize(new Dimension(1366, 768));
         spentTime = 0;
-        waitTime = 1;
+        waitTime = 2;
 
         menu = Main.menu;
 
@@ -52,11 +58,14 @@ public class Board extends JPanel implements ActionListener{
     }
 
     private void initComponents() {
+
+
+
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.SOUTH;
 
         c.weighty = 10;
-        c.gridy = 2;
+        c.gridy = 3;
 
         countDown = new JLabel();
         countDown.setFont(new Font(null, Font.PLAIN, 200));
@@ -82,6 +91,20 @@ public class Board extends JPanel implements ActionListener{
         c.anchor = GridBagConstraints.CENTER;
         c.gridy = 1;
         add(start, c);
+
+        c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridy = 2;
+
+        drinkContainer = new JPanel();
+        drinkContainer.setOpaque(false);
+        drinkContainer.setVisible(false);
+        drinkText = new JLabel("Drink!");
+        drinkText.setFont(new Font(null,Font.PLAIN,300));
+        drinkText.setForeground(Color.white);
+        drinkText.setVisible(true);
+        drinkContainer.add(drinkText);
+        add(drinkContainer,c);
 
 
     }
@@ -113,7 +136,8 @@ public class Board extends JPanel implements ActionListener{
             entities.add(new AutoEntity(this));
         }
 
-        entities.forEach(AutoEntity::calculate);
+        ArrayList<AutoEntity> tempEntities = new ArrayList<AutoEntity>(entities);
+        tempEntities.forEach(AutoEntity::calculate);
 
         repaint();
     }
@@ -186,6 +210,10 @@ public class Board extends JPanel implements ActionListener{
                 seconds += 1;
                 time -= 1000;
             }
+            if(minutes + 1 < Main.drinkingTime){
+                if (seconds == 59) drink();
+                if (seconds == 54) drinkContainer.setVisible(false);
+            }
             if(seconds < 10){
                 secs = "0"+seconds;
             }else {
@@ -201,6 +229,13 @@ public class Board extends JPanel implements ActionListener{
                 mills = "" + milliseconds;
             }
         return mins+":"+secs+":"+mills;
+    }
+
+    private void drink() {
+        if(started)drinkContainer.setVisible(true);
+        else{
+            drinkContainer.setVisible(false);
+        }
     }
 
     private class StartListener implements ActionListener{
@@ -219,6 +254,4 @@ public class Board extends JPanel implements ActionListener{
             started = false;
         }
     }
-
-
 }

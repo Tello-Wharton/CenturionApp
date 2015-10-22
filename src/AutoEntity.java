@@ -31,10 +31,10 @@ public class AutoEntity {
 
 
         if(Math.random() < 0.5){
-            xPos = -200;
-            movement = 4;
+            xPos = -1000;
+            movement = 3;
         }else {
-            movement = -4;
+            movement = -3;
         }
 
         int index = (int) (Math.random()*images.size());
@@ -46,6 +46,10 @@ public class AutoEntity {
 
     public void calculate(){
         xPos+=movement;
+
+        if(xPos > 3000 || xPos < -3000){
+            board.entities.remove(this);
+        }
     }
 
     public void draw(Graphics g){
