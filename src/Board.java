@@ -38,6 +38,11 @@ public class Board extends JPanel implements ActionListener{
     private JLabel drinkText;
 
 
+
+    private boolean cake;
+
+
+
     public Board() {
         addMouseMotionListener(new MAdapter());
         setLayout(new GridBagLayout());
@@ -47,6 +52,7 @@ public class Board extends JPanel implements ActionListener{
         setMinimumSize(new Dimension(1366, 768));
         spentTime = 0;
         waitTime = 4;
+        cake = true;
 
         menu = Main.menu;
 
@@ -165,7 +171,6 @@ public class Board extends JPanel implements ActionListener{
         public void mouseMoved(MouseEvent e){
             mouseMotion = 5000;
             menuVisible(true);
-
         }
 
     }
@@ -212,7 +217,10 @@ public class Board extends JPanel implements ActionListener{
             }
             if (minutes + 1 < Main.drinkingTime) {
                 if (seconds == 59) drink();
-                if (seconds == 54) drinkContainer.setVisible(false);
+                if (seconds == 54){
+                    drinkContainer.setVisible(false);
+                    cake = true;
+                }
             }
             if (seconds < 10) {
                 secs = "0" + seconds;
@@ -230,14 +238,18 @@ public class Board extends JPanel implements ActionListener{
             return mins + ":" + secs + ":" + mills;
         }else {
             drinkText.setText("<html><center>LAST</center><center>DRINK</center><center>:)</center></html>");
-            drinkText.setFont(new Font(null,Font.PLAIN,96));
+            drinkText.setFont(new Font(null, Font.PLAIN, 96));
             drinkContainer.setVisible(true);
+            horn();
             return "000:00:000";
         }
     }
 
     private void drink() {
-        if(started)drinkContainer.setVisible(true);
+        if(started){
+            drinkContainer.setVisible(true);
+            horn();
+        }
         else{
             drinkContainer.setVisible(false);
         }
@@ -257,6 +269,14 @@ public class Board extends JPanel implements ActionListener{
             spentTime = (Main.drinkingTime - Main.startTime)* 60000 - timeRemaining;
             startVisible = true;
             started = false;
+        }
+    }
+
+    private void horn(){
+        if(cake) {
+            Thread sound = new Thread(new Sound());
+            sound.start();
+            cake = false;
         }
     }
 }
