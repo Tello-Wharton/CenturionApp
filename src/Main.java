@@ -5,7 +5,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Created by Aaron on 21/10/2015.
+ * @author Aaron
+ * @author JRIngram (Docs). 
+ * Created 21/10/2015.
  */
 public class Main extends JFrame{
     private JButton fullscreen;
@@ -40,12 +42,15 @@ public class Main extends JFrame{
                 Main ex = new Main();
                 ex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 ex.setSize(WIDTH, HEIGHT);
-                ex.setResizable(false);
+                ex.setResizable(true);
                 ex.setVisible(true);
             }
         });
     }
-
+    
+    /**
+     * Creates GUI for system; serves as main loop.
+     */
     public Main() {
         menu = new ArrayList<JButton>();
         IS_IN_FULLSCREEN = false;
@@ -80,14 +85,14 @@ public class Main extends JFrame{
         startTime = 0;
 
         initBoard();
-
-        setResizable(false);
-
-
     }
 
 
-
+    /**
+     * Changes the Screen size so that it is full screen.
+     * @author Aaron
+     *
+     */
     private class FullScreenEffect implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent arg0) {
@@ -119,6 +124,11 @@ public class Main extends JFrame{
             }
         }
     }
+    
+    /**
+     * Closes the System.
+     * @author Aaron
+     */
     private class CloseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -194,7 +204,12 @@ public class Main extends JFrame{
         }
         return row;
     }
-
+    
+    /**
+     *Updates startTime and drinkingTime.
+     * @author Aaron
+     *
+     */
     private class OkayListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -207,14 +222,20 @@ public class Main extends JFrame{
             }
         }
     }
-
+    
+    /**
+     * Closes Settings GUI.
+     * @author Aaron
+     *
+     */
     private class CancelListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             options.setVisible(false);
         }
     }
-
+    
+    
     private class ResetListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
