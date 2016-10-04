@@ -212,7 +212,7 @@ public class Main extends JFrame{
     }
     
     /**
-     *Updates startTime and drinkingTime.
+     * Updates startTime and drinkingTime.
      * @author Aaron
      *
      */

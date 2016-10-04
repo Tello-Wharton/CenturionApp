@@ -38,11 +38,14 @@ public class Board extends JPanel implements ActionListener{
     private JLabel drinkText;
 
 
+    /*Implemented by Aaron, not sure what it does but it interacts with the horn sounding.*/
 
     private boolean cake;
 
 
-
+    /**
+     * Creates game board.
+     */
     public Board() {
         addMouseMotionListener(new MAdapter());
         setLayout(new GridBagLayout());
@@ -62,7 +65,10 @@ public class Board extends JPanel implements ActionListener{
         entities = new ArrayList<AutoEntity>();
 
     }
-
+    
+    /**
+     * Creates components for the game board.
+     */
     private void initComponents() {
 
 
@@ -114,7 +120,10 @@ public class Board extends JPanel implements ActionListener{
 
 
     }
-
+    
+    /**
+     * Creates initial settings for the app.
+     */
     public void initApp(){
 
         startTime = System.currentTimeMillis();
@@ -257,7 +266,11 @@ public class Board extends JPanel implements ActionListener{
             drinkContainer.setVisible(false);
         }
     }
-
+    
+    /**
+     * Begins Centurion.
+     *
+     */
     private class StartListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -267,6 +280,10 @@ public class Board extends JPanel implements ActionListener{
         }
     }
     
+    /**
+     * Pauses the Centurion.
+     *
+     */
     private class PauseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -275,7 +292,10 @@ public class Board extends JPanel implements ActionListener{
             started = false;
         }
     }
-
+    
+    /**
+     * Sounds MLG horn noise.
+     */
     private void horn(){
         if(cake) {
             Thread sound = new Thread(new Sound());
