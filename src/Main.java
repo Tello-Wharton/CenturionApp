@@ -33,7 +33,8 @@ public class Main extends JFrame{
 
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 768;
-
+    
+    private boolean playHorn = true;
 
 
     public static void main(String[] args){
@@ -164,7 +165,25 @@ public class Main extends JFrame{
             start.setToolTipText("How many minutes into the Centurion you want to start from.");
             startBox = new JTextField("" + startTime,3);
             rows.add(makeRow(start,startBox));
-
+            
+            //Choose whether the horn sound plays each minutes.
+            JLabel playHornLabel = new JLabel("Horn Sound: ");
+            playHornLabel.setForeground(Color.white);
+            playHornLabel.setToolTipText("Select whether the horn sound plays each minute.");
+            JCheckBox hornBox = new JCheckBox();
+            hornBox.setSelected(playHorn);
+            hornBox.setBackground(Color.black);
+            
+            hornBox.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					playHorn = hornBox.isSelected();
+					board.setPlayHorn(playHorn);
+				}  	
+            });
+            
+            rows.add(makeRow(playHornLabel, hornBox));
+            
             
             optionBoard.setLayout(new GridLayout(rows.size() + 1, 0));
 
@@ -175,7 +194,9 @@ public class Main extends JFrame{
             //Creates Okay, Reset and Cancel Buttons.
             JButton okay = new JButton("Okay");
             okay.setToolTipText("Confirms Settings.");
+            
             okay.addActionListener(new OkayListener());
+            
             JButton reset = new JButton("Reset");
             reset.setToolTipText("Resets clock to previous start time.");
             reset.addActionListener(new ResetListener());
@@ -223,6 +244,7 @@ public class Main extends JFrame{
                 startTime = Integer.parseInt(startBox.getText());
                 drinkingTime = Integer.parseInt(timeBox.getText());
                 options.setVisible(false);
+                board.setPlayHorn(playHorn);
             }catch (NumberFormatException exception){
                 JOptionPane.showMessageDialog(null,"Numbers Plz");
             }

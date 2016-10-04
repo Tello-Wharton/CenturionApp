@@ -36,7 +36,7 @@ public class Board extends JPanel implements ActionListener{
 
     private JPanel drinkContainer;
     private JLabel drinkText;
-
+    private boolean playHorn;
 
     /*Implemented by Aaron, not sure what it does but it interacts with the horn sounding.*/
 
@@ -63,7 +63,8 @@ public class Board extends JPanel implements ActionListener{
         initApp();
 
         entities = new ArrayList<AutoEntity>();
-
+        
+        playHorn = true;
     }
     
     /**
@@ -249,7 +250,9 @@ public class Board extends JPanel implements ActionListener{
             drinkText.setText("<html><center>LAST</center><center>DRINK</center><center>:)</center></html>");
             drinkText.setFont(new Font(null, Font.PLAIN, 96));
             drinkContainer.setVisible(true);
-            horn();
+            if(playHorn){
+                horn();
+            }
             return "000:00:000";
         }
     }
@@ -260,7 +263,9 @@ public class Board extends JPanel implements ActionListener{
     private void drink() {
         if(started){
             drinkContainer.setVisible(true);
-            horn();
+            if(playHorn){
+                horn();
+            }
         }
         else{
             drinkContainer.setVisible(false);
@@ -269,7 +274,6 @@ public class Board extends JPanel implements ActionListener{
     
     /**
      * Begins Centurion.
-     *
      */
     private class StartListener implements ActionListener{
         @Override
@@ -282,7 +286,6 @@ public class Board extends JPanel implements ActionListener{
     
     /**
      * Pauses the Centurion.
-     *
      */
     private class PauseListener implements ActionListener{
         @Override
@@ -297,10 +300,19 @@ public class Board extends JPanel implements ActionListener{
      * Sounds MLG horn noise.
      */
     private void horn(){
+    	System.out.println(playHorn);
         if(cake) {
             Thread sound = new Thread(new Sound());
             sound.start();
             cake = false;
         }
+    }
+    
+    /**
+     * Sets whether the horn sound should play each minute.
+     * @param horn Should the horn play or not?
+     */
+    public void setPlayHorn(boolean horn){
+    	playHorn = horn;
     }
 }
