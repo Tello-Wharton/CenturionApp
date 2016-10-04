@@ -36,13 +36,16 @@ public class Board extends JPanel implements ActionListener{
 
     private JPanel drinkContainer;
     private JLabel drinkText;
+    private boolean playHorn;
 
-
+    /*Implemented by Aaron, not sure what it does but it interacts with the horn sounding.*/
 
     private boolean cake;
 
 
-
+    /**
+     * Creates game board.
+     */
     public Board() {
         addMouseMotionListener(new MAdapter());
         setLayout(new GridBagLayout());
@@ -60,9 +63,13 @@ public class Board extends JPanel implements ActionListener{
         initApp();
 
         entities = new ArrayList<AutoEntity>();
-
+        
+        playHorn = true;
     }
-
+    
+    /**
+     * Creates components for the game board.
+     */
     private void initComponents() {
 
 
@@ -114,7 +121,10 @@ public class Board extends JPanel implements ActionListener{
 
 
     }
-
+    
+    /**
+     * Creates initial settings for the app.
+     */
     public void initApp(){
 
         startTime = System.currentTimeMillis();
@@ -240,21 +250,31 @@ public class Board extends JPanel implements ActionListener{
             drinkText.setText("<html><center>LAST</center><center>DRINK</center><center>:)</center></html>");
             drinkText.setFont(new Font(null, Font.PLAIN, 96));
             drinkContainer.setVisible(true);
-            horn();
+            if(playHorn){
+                horn();
+            }
             return "000:00:000";
         }
     }
-
+    
+    /**
+     * Displays drink alert and sounds horn.
+     */
     private void drink() {
         if(started){
             drinkContainer.setVisible(true);
-            horn();
+            if(playHorn){
+                horn();
+            }
         }
         else{
             drinkContainer.setVisible(false);
         }
     }
-
+    
+    /**
+     * Begins Centurion.
+     */
     private class StartListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -263,6 +283,10 @@ public class Board extends JPanel implements ActionListener{
             started = true;
         }
     }
+    
+    /**
+     * Pauses the Centurion.
+     */
     private class PauseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -271,12 +295,24 @@ public class Board extends JPanel implements ActionListener{
             started = false;
         }
     }
-
+    
+    /**
+     * Sounds MLG horn noise.
+     */
     private void horn(){
+    	System.out.println(playHorn);
         if(cake) {
             Thread sound = new Thread(new Sound());
             sound.start();
             cake = false;
         }
+    }
+    
+    /**
+     * Sets whether the horn sound should play each minute.
+     * @param horn Should the horn play or not?
+     */
+    public void setPlayHorn(boolean horn){
+    	playHorn = horn;
     }
 }
