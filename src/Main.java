@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * @author Aaron
  * @author JRIngram (Docs). 
  * Created 21/10/2015.
+ * @version 04/10/2016
  */
 public class Main extends JFrame{
     private JButton fullscreen;
@@ -193,7 +194,12 @@ public class Main extends JFrame{
 
         }
     }
-
+    
+    /**
+     * Creates a row of components.
+     * @param components
+     * @return A row of components in a panel.
+     */
     private static JPanel makeRow(Component... components){
         JPanel row = new JPanel();
         row.setLayout(new FlowLayout());
@@ -235,14 +241,19 @@ public class Main extends JFrame{
         }
     }
     
-    
+    /**
+     *	Recalls initBoard if alerted. 
+     */
     private class ResetListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             initBoard();
         }
     }
-
+    
+    /**
+     * Creates the board/gui for the program.
+     */
     private void initBoard(){
         board = new Board();
         setContentPane(board);

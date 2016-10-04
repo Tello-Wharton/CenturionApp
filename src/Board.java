@@ -244,7 +244,10 @@ public class Board extends JPanel implements ActionListener{
             return "000:00:000";
         }
     }
-
+    
+    /**
+     * Displays drink alert and sounds horn.
+     */
     private void drink() {
         if(started){
             drinkContainer.setVisible(true);
@@ -263,6 +266,7 @@ public class Board extends JPanel implements ActionListener{
             started = true;
         }
     }
+    
     private class PauseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
