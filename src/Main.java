@@ -125,40 +125,51 @@ public class Main extends JFrame{
             System.exit(0);
         }
     }
-
+    
+    /**
+     * Creates a UI for the user to change the Centurion Settings.
+     * @author Aaron
+     * @author JRIngram
+     *
+     */
     private class SettingsListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             rows = new ArrayList<JPanel>();
-            options = new JFrame();
+            options = new JFrame("Centurion Settings");
 
             JPanel optionBoard = new JPanel();
             optionBoard.setBackground(Color.black);
-
-            JLabel time = new JLabel("Centurion Length:");
+            
+            //Creates Centurion Length UI.
+            JLabel time = new JLabel("Centurion Length (mins):");
             time.setForeground(Color.white);
             timeBox = new JTextField("" + drinkingTime,3);
             rows.add(makeRow(time,timeBox));
-
+            
+            //Creates start time UI.
             JLabel start = new JLabel("Start Time:");
             start.setForeground(Color.white);
+            start.setToolTipText("How many minutes into the Centurion you want to start from.");
             startBox = new JTextField("" + startTime,3);
             rows.add(makeRow(start,startBox));
 
-
-
-
+            
             optionBoard.setLayout(new GridLayout(rows.size() + 1, 0));
 
             for(JPanel row : rows){
                 optionBoard.add(row);
             }
-
+            
+            //Creates Okay, Reset and Cancel Buttons.
             JButton okay = new JButton("Okay");
+            okay.setToolTipText("Confirms Settings.");
             okay.addActionListener(new OkayListener());
             JButton reset = new JButton("Reset");
+            reset.setToolTipText("Resets clock to previous start time.");
             reset.addActionListener(new ResetListener());
             JButton cancel = new JButton("Cancel");
+            cancel.setToolTipText("Closes Settings Dialog without updating settings.");
             cancel.addActionListener(new CancelListener());
             optionBoard.add(makeRow(okay,reset,cancel));
 
