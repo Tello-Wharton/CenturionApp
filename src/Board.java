@@ -1,9 +1,13 @@
 
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -112,6 +116,7 @@ public class Board extends JPanel implements ActionListener{
         drinkContainer = new JPanel();
         drinkContainer.setOpaque(false);
         drinkContainer.setVisible(false);
+        
         drinkText = new JLabel("Drink!");
         drinkText.setFont(new Font(null,Font.PLAIN,300));
         drinkText.setForeground(Color.white);
@@ -203,7 +208,7 @@ public class Board extends JPanel implements ActionListener{
         if (time > 0) {
             int minutes = 0;
             int seconds = 0;
-            int milliseconds;
+            int milliseconds = 0;
 
             String mins;
             String secs;
@@ -226,7 +231,16 @@ public class Board extends JPanel implements ActionListener{
                 time -= 1000;
             }
             if (minutes + 1 < Main.drinkingTime) {
-                if (seconds == 59) drink();
+                if (seconds == 59) {
+                	if(cake)drinkTextFlash(2.0);
+                	drink();
+                	this.setBackground(Color.red);
+                	countDown.setForeground(Color.green);
+                }
+                if (seconds == 58){
+                	this.setBackground(Color.black);
+                    countDown.setForeground(Color.white);
+                }
                 if (seconds == 54){
                     drinkContainer.setVisible(false);
                     cake = true;
@@ -263,6 +277,7 @@ public class Board extends JPanel implements ActionListener{
     private void drink() {
         if(started){
             drinkContainer.setVisible(true);
+            
             if(playHorn){
                 horn();
             }
@@ -300,7 +315,6 @@ public class Board extends JPanel implements ActionListener{
      * Sounds MLG horn noise.
      */
     private void horn(){
-    	System.out.println(playHorn);
         if(cake) {
             Thread sound = new Thread(new Sound());
             sound.start();
@@ -314,5 +328,22 @@ public class Board extends JPanel implements ActionListener{
      */
     public void setPlayHorn(boolean horn){
     	playHorn = horn;
+    }
+    
+    public void drinkTextFlash(double length){ //flashes the "Drink!" text for a given number of seconds
+    	Thread flash = new Thread() {
+    	    public void run() {
+    	    	for(double i = 0; i< length ;i += 0.1){
+    	    		if(drinkText.getForeground().equals(Color.white)){
+        	    		drinkText.setForeground(Color.yellow);
+        	    	}
+        	    	else{
+        	    		drinkText.setForeground(Color.white);
+        	    	}
+    	    		try{Thread.sleep(200);} catch(InterruptedException e){e.printStackTrace();} //pauses the flash thread for 200 milliseconds
+    	    	}
+    	    }
+    	};
+    	flash.start();
     }
 }
