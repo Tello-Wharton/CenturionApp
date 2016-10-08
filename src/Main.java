@@ -5,7 +5,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Created by Aaron on 21/10/2015.
+ * @author Aaron
+ * @author JRIngram (Docs). 
+ * Created 21/10/2015.
+ * @version 04/10/2016
  */
 public class Main extends JFrame{
     private JButton fullscreen;
@@ -30,7 +33,8 @@ public class Main extends JFrame{
 
     public static final int WIDTH = 1024;
     public static final int HEIGHT = 768;
-
+    
+    private boolean playHorn = true;
 
 
     public static void main(String[] args){
@@ -40,12 +44,15 @@ public class Main extends JFrame{
                 Main ex = new Main();
                 ex.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 ex.setSize(WIDTH, HEIGHT);
-                ex.setResizable(false);
+                ex.setResizable(true);
                 ex.setVisible(true);
             }
         });
     }
-
+    
+    /**
+     * Creates GUI for system; serves as main loop.
+     */
     public Main() {
         menu = new ArrayList<JButton>();
         IS_IN_FULLSCREEN = false;
@@ -80,14 +87,14 @@ public class Main extends JFrame{
         startTime = 0;
 
         initBoard();
-
-        setResizable(false);
-
-
     }
 
 
-
+    /**
+     * Changes the Screen size so that it is full screen.
+     * @author Aaron
+     *
+     */
     private class FullScreenEffect implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent arg0) {
@@ -119,46 +126,82 @@ public class Main extends JFrame{
             }
         }
     }
+    
+    /**
+     * Closes the System.
+     * @author Aaron
+     */
     private class CloseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
     }
-
+    
+    /**
+     * Creates a UI for the user to change the Centurion Settings.
+     * @author Aaron
+     * @author JRIngram
+     *
+     */
     private class SettingsListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             rows = new ArrayList<JPanel>();
-            options = new JFrame();
+            options = new JFrame("Centurion Settings");
 
             JPanel optionBoard = new JPanel();
             optionBoard.setBackground(Color.black);
-
-            JLabel time = new JLabel("Centurion Length:");
+            
+            //Creates Centurion Length UI.
+            JLabel time = new JLabel("Centurion Length (mins):");
             time.setForeground(Color.white);
             timeBox = new JTextField("" + drinkingTime,3);
             rows.add(makeRow(time,timeBox));
-
+            
+            //Creates start time UI.
             JLabel start = new JLabel("Start Time:");
             start.setForeground(Color.white);
+            start.setToolTipText("How many minutes into the Centurion you want to start from.");
             startBox = new JTextField("" + startTime,3);
             rows.add(makeRow(start,startBox));
-
-
-
-
+            
+            //Choose whether the horn sound plays each minutes.
+            JLabel playHornLabel = new JLabel("Horn Sound: ");
+            playHornLabel.setForeground(Color.white);
+            playHornLabel.setToolTipText("Select whether the horn sound plays each minute.");
+            JCheckBox hornBox = new JCheckBox();
+            hornBox.setSelected(playHorn);
+            hornBox.setBackground(Color.black);
+            
+            hornBox.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					playHorn = hornBox.isSelected();
+					board.setPlayHorn(playHorn);
+				}  	
+            });
+            
+            rows.add(makeRow(playHornLabel, hornBox));
+            
+            
             optionBoard.setLayout(new GridLayout(rows.size() + 1, 0));
 
             for(JPanel row : rows){
                 optionBoard.add(row);
             }
-
+            
+            //Creates Okay, Reset and Cancel Buttons.
             JButton okay = new JButton("Okay");
+            okay.setToolTipText("Confirms Settings.");
+            
             okay.addActionListener(new OkayListener());
+            
             JButton reset = new JButton("Reset");
+            reset.setToolTipText("Resets clock to previous start time.");
             reset.addActionListener(new ResetListener());
             JButton cancel = new JButton("Cancel");
+            cancel.setToolTipText("Closes Settings Dialog without updating settings.");
             cancel.addActionListener(new CancelListener());
             optionBoard.add(makeRow(okay,reset,cancel));
 
@@ -172,7 +215,12 @@ public class Main extends JFrame{
 
         }
     }
-
+    
+    /**
+     * Creates a row of components.
+     * @param components
+     * @return A row of components in a panel.
+     */
     private static JPanel makeRow(Component... components){
         JPanel row = new JPanel();
         row.setLayout(new FlowLayout());
@@ -183,7 +231,12 @@ public class Main extends JFrame{
         }
         return row;
     }
-
+    
+    /**
+     * Updates startTime and drinkingTime.
+     * @author Aaron
+     *
+     */
     private class OkayListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -191,26 +244,38 @@ public class Main extends JFrame{
                 startTime = Integer.parseInt(startBox.getText());
                 drinkingTime = Integer.parseInt(timeBox.getText());
                 options.setVisible(false);
+                board.setPlayHorn(playHorn);
             }catch (NumberFormatException exception){
                 JOptionPane.showMessageDialog(null,"Numbers Plz");
             }
         }
     }
-
+    
+    /**
+     * Closes Settings GUI.
+     * @author Aaron
+     *
+     */
     private class CancelListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             options.setVisible(false);
         }
     }
-
+    
+    /**
+     *	Recalls initBoard if alerted. 
+     */
     private class ResetListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             initBoard();
         }
     }
-
+    
+    /**
+     * Creates the board/gui for the program.
+     */
     private void initBoard(){
         board = new Board();
         setContentPane(board);

@@ -36,13 +36,16 @@ public class Board extends JPanel implements ActionListener{
 
     private JPanel drinkContainer;
     private JLabel drinkText;
+    private boolean playHorn;
 
-
+    /*Implemented by Aaron, not sure what it does but it interacts with the horn sounding.*/
 
     private boolean cake;
 
 
-
+    /**
+     * Creates game board.
+     */
     public Board() {
         addMouseMotionListener(new MAdapter());
         setLayout(new GridBagLayout());
@@ -60,9 +63,13 @@ public class Board extends JPanel implements ActionListener{
         initApp();
 
         entities = new ArrayList<AutoEntity>();
-
+        
+        playHorn = true;
     }
-
+    
+    /**
+     * Creates components for the game board.
+     */
     private void initComponents() {
 
 
@@ -105,6 +112,7 @@ public class Board extends JPanel implements ActionListener{
         drinkContainer = new JPanel();
         drinkContainer.setOpaque(false);
         drinkContainer.setVisible(false);
+        
         drinkText = new JLabel("Drink!");
         drinkText.setFont(new Font(null,Font.PLAIN,300));
         drinkText.setForeground(Color.white);
@@ -114,7 +122,10 @@ public class Board extends JPanel implements ActionListener{
 
 
     }
-
+    
+    /**
+     * Creates initial settings for the app.
+     */
     public void initApp(){
 
         startTime = System.currentTimeMillis();
@@ -193,7 +204,7 @@ public class Board extends JPanel implements ActionListener{
         if (time > 0) {
             int minutes = 0;
             int seconds = 0;
-            int milliseconds;
+            int milliseconds = 0;
 
             String mins;
             String secs;
@@ -216,7 +227,16 @@ public class Board extends JPanel implements ActionListener{
                 time -= 1000;
             }
             if (minutes + 1 < Main.drinkingTime) {
-                if (seconds == 59) drink();
+                if (seconds == 59) {
+                	if(cake)drinkTextFlash(2.0);
+                	drink();
+                	this.setBackground(Color.red);
+                	countDown.setForeground(Color.green);
+                }
+                if (seconds == 58){
+                	this.setBackground(Color.black);
+                    countDown.setForeground(Color.white);
+                }
                 if (seconds == 54){
                     drinkContainer.setVisible(false);
                     cake = true;
@@ -240,21 +260,32 @@ public class Board extends JPanel implements ActionListener{
             drinkText.setText("<html><center>LAST</center><center>DRINK</center><center>:)</center></html>");
             drinkText.setFont(new Font(null, Font.PLAIN, 96));
             drinkContainer.setVisible(true);
-            horn();
+            if(playHorn){
+                horn();
+            }
             return "000:00:000";
         }
     }
-
+    
+    /**
+     * Displays drink alert and sounds horn.
+     */
     private void drink() {
         if(started){
             drinkContainer.setVisible(true);
-            horn();
+            
+            if(playHorn){
+                horn();
+            }
         }
         else{
             drinkContainer.setVisible(false);
         }
     }
-
+    
+    /**
+     * Begins Centurion.
+     */
     private class StartListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -263,6 +294,10 @@ public class Board extends JPanel implements ActionListener{
             started = true;
         }
     }
+    
+    /**
+     * Pauses the Centurion.
+     */
     private class PauseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -271,12 +306,40 @@ public class Board extends JPanel implements ActionListener{
             started = false;
         }
     }
-
+    
+    /**
+     * Sounds MLG horn noise.
+     */
     private void horn(){
         if(cake) {
             Thread sound = new Thread(new Sound());
             sound.start();
             cake = false;
         }
+    }
+    
+    /**
+     * Sets whether the horn sound should play each minute.
+     * @param horn Should the horn play or not?
+     */
+    public void setPlayHorn(boolean horn){
+    	playHorn = horn;
+    }
+    
+    public void drinkTextFlash(double length){ //flashes the "Drink!" text for a given number of seconds
+    	Thread flash = new Thread() {
+    	    public void run() {
+    	    	for(double i = 0; i< length ;i += 0.1){
+    	    		if(drinkText.getForeground().equals(Color.white)){
+        	    		drinkText.setForeground(Color.yellow);
+        	    	}
+        	    	else{
+        	    		drinkText.setForeground(Color.white);
+        	    	}
+    	    		try{Thread.sleep(200);} catch(InterruptedException e){e.printStackTrace();} //pauses the flash thread for 200 milliseconds
+    	    	}
+    	    }
+    	};
+    	flash.start();
     }
 }
