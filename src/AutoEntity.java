@@ -25,8 +25,8 @@ public class AutoEntity {
             yPos = (int) (Math.random()*board.getToolkit().getScreenSize().height);
             xPos = board.getToolkit().getScreenSize().width;
         }else {
-            yPos = (int) (Math.random()* Window.HEIGHT);
-            xPos = Window.WIDTH;
+            yPos = (int) (Math.random()* board.getWidth());
+            xPos = board.getWidth();
         }
 
 
