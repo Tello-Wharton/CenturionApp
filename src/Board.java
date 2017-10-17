@@ -312,7 +312,7 @@ public class Board extends JPanel implements ActionListener{
      */
     private void horn(){
         if(cake) {
-            Thread sound = new Thread(new Sound());
+            Thread sound = new Thread(new Sound("horn.wav"));
             sound.start();
             cake = false;
         }

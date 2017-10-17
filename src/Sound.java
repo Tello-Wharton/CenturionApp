@@ -25,9 +25,15 @@ public class Sound implements LineListener, Runnable {
     /**
      * this flag indicates whether the playback completes or not.
      */
-    boolean playCompleted;
+    private boolean playCompleted;
+    private String audioFilePath;
+
+    public Sound(String audioFilePath){
+        this.audioFilePath = audioFilePath;
+    }
 
     void play(String audioFilePath) {
+
         File audioFile = new File(audioFilePath);
 
         try {
@@ -89,8 +95,6 @@ public class Sound implements LineListener, Runnable {
 
     @Override
     public void run() {
-        String audioFilePath = "horn.wav";
-        Sound player = new Sound();
-        player.play(audioFilePath);
+        play(audioFilePath);
     }
 }
