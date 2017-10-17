@@ -21,12 +21,12 @@ public class AutoEntity {
     public AutoEntity(Board board){
         this.board = board;
 
-        if(Main.IS_IN_FULLSCREEN){
+        if(Window.IS_IN_FULLSCREEN){
             yPos = (int) (Math.random()*board.getToolkit().getScreenSize().height);
             xPos = board.getToolkit().getScreenSize().width;
         }else {
-            yPos = (int) (Math.random()*Main.HEIGHT);
-            xPos = Main.WIDTH;
+            yPos = (int) (Math.random()* Window.HEIGHT);
+            xPos = Window.WIDTH;
         }
 
 

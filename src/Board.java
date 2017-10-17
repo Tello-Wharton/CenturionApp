@@ -57,7 +57,7 @@ public class Board extends JPanel implements ActionListener{
         waitTime = 4;
         cake = true;
 
-        menu = Main.menu;
+        menu = Window.menu;
 
         initComponents();
         initApp();
@@ -142,10 +142,10 @@ public class Board extends JPanel implements ActionListener{
         if(mouseMotion < 0)menuVisible(false);
 
         if(started) {
-            timeRemaining = startTime + (Main.drinkingTime - Main.startTime) * 60000 - System.currentTimeMillis() - spentTime;
+            timeRemaining = startTime + (Window.drinkingTime - Window.startTime) * 60000 - System.currentTimeMillis() - spentTime;
             countDown.setText(processClock(timeRemaining));
         }else {
-            countDown.setText(processClock((Main.drinkingTime - Main.startTime)* 60000 - spentTime));
+            countDown.setText(processClock((Window.drinkingTime - Window.startTime)* 60000 - spentTime));
         }
 
         if((System.currentTimeMillis() - waitStart) > waitTime * 1000){
@@ -226,7 +226,7 @@ public class Board extends JPanel implements ActionListener{
                 seconds += 1;
                 time -= 1000;
             }
-            if (minutes + 1 < Main.drinkingTime) {
+            if (minutes + 1 < Window.drinkingTime) {
                 if (seconds == 59) {
                 	if(cake)drinkTextFlash(2.0);
                 	drink();
@@ -301,7 +301,7 @@ public class Board extends JPanel implements ActionListener{
     private class PauseListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            spentTime = (Main.drinkingTime - Main.startTime)* 60000 - timeRemaining;
+            spentTime = (Window.drinkingTime - Window.startTime)* 60000 - timeRemaining;
             startVisible = true;
             started = false;
         }
